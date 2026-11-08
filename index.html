@@ -1,0 +1,400 @@
+
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#8fc9d5">
+  <title></title>
+
+  <style>
+    :root {
+      color-scheme: light;
+
+      --sky-top: #80c5dd;
+      --sky-bottom: #fff1c6;
+      --sun: #fff1ab;
+      --cloud: rgba(255, 255, 255, .7);
+
+      --hill-back: #8ba77b;
+      --hill-front: #6f9464;
+      --field-top: #e8c978;
+      --field-bottom: #bc9049;
+      --field-line: rgba(113, 83, 29, .13);
+
+      --tree: #315c40;
+      --house: #eac9a0;
+      --roof: #a95e42;
+      --petal: #fff5d8;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      width: 100%;
+      min-height: 100%;
+    }
+
+    body {
+      overflow: hidden;
+    }
+
+    .scene {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      height: 100svh;
+      overflow: hidden;
+      isolation: isolate;
+      background: linear-gradient(
+        to bottom,
+        var(--sky-top),
+        var(--sky-bottom) 68%
+      );
+      transition: background 1s ease;
+    }
+
+    /* Hemel */
+
+    .stars {
+      position: absolute;
+      inset: 0 0 35%;
+      opacity: 0;
+      background-image:
+        radial-gradient(2px 2px at 12% 18%, white 98%, transparent),
+        radial-gradient(3px 3px at 27% 41%, white 98%, transparent),
+        radial-gradient(2px 2px at 43% 14%, white 98%, transparent),
+        radial-gradient(2px 2px at 59% 34%, white 98%, transparent),
+        radial-gradient(3px 3px at 78% 17%, white 98%, transparent),
+        radial-gradient(2px 2px at 91% 43%, white 98%, transparent);
+      transition: opacity 1s ease;
+    }
+
+    .sun {
+      position: absolute;
+      top: 13%;
+      right: 22%;
+      width: clamp(85px, 11vw, 160px);
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: var(--sun);
+      box-shadow:
+        0 0 65px 20px rgba(255, 232, 157, .45),
+        0 0 150px 60px rgba(255, 232, 157, .18);
+      transition: background 1s, box-shadow 1s;
+    }
+
+    .cloud {
+      position: absolute;
+      width: 180px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--cloud);
+      filter: blur(13px);
+      opacity: .6;
+      animation: float 25s ease-in-out infinite alternate;
+    }
+
+    .cloud.one {
+      top: 20%;
+      left: 12%;
+    }
+
+    .cloud.two {
+      top: 35%;
+      right: 9%;
+      width: 240px;
+      opacity: .35;
+      animation-delay: -8s;
+    }
+
+    @keyframes float {
+      to {
+        transform: translateX(35px);
+      }
+    }
+
+    /* Glooiende heuvels */
+
+    .hill {
+      position: absolute;
+      border-radius: 50% 50% 0 0;
+      transition: background 1s;
+    }
+
+    .hill.back {
+      top: 47%;
+      left: -25%;
+      width: 140%;
+      height: 40%;
+      background: var(--hill-back);
+      transform: rotate(-5deg);
+    }
+
+    .hill.front {
+      top: 53%;
+      left: 24%;
+      width: 110%;
+      height: 35%;
+      background: var(--hill-front);
+      transform: rotate(5deg);
+    }
+
+    /* Klein landhuis */
+
+    .house {
+      position: absolute;
+      z-index: 3;
+      left: 30%;
+      top: 54%;
+      width: 65px;
+      height: 46px;
+      background: var(--house);
+      box-shadow: 4px 6px 12px rgba(0, 0, 0, .12);
+    }
+
+    .house::before {
+      content: "";
+      position: absolute;
+      left: -9px;
+      bottom: 100%;
+      width: calc(100% + 18px);
+      height: 29px;
+      background: var(--roof);
+      clip-path: polygon(0 100%, 50% 0, 100% 100%);
+    }
+
+    .house::after {
+      content: "";
+      position: absolute;
+      width: 12px;
+      height: 22px;
+      left: 27px;
+      bottom: 0;
+      background: #694e3b;
+      box-shadow: -20px -12px 0 -3px #654a39;
+    }
+
+    /* Cipressen */
+
+    .tree {
+      position: absolute;
+      z-index: 4;
+      width: 24px;
+      height: 105px;
+      background: var(--tree);
+      border-radius: 50% 50% 37% 37%;
+      transform-origin: bottom;
+      transition: background 1s;
+    }
+
+    .tree::after {
+      content: "";
+      position: absolute;
+      bottom: -11px;
+      left: 10px;
+      width: 4px;
+      height: 17px;
+      background: #5c4b32;
+    }
+
+    .tree.one {
+      left: 20%;
+      top: 49%;
+      transform: scale(.85);
+    }
+
+    .tree.two {
+      left: 23%;
+      top: 51%;
+      transform: scale(.65);
+    }
+
+    .tree.three {
+      left: 75%;
+      top: 51%;
+      transform: scale(.95);
+    }
+
+    /* Gouden veld */
+
+    .field {
+      position: absolute;
+      z-index: 5;
+      inset: 59% 0 0;
+      background:
+        repeating-linear-gradient(
+          165deg,
+          transparent 0 26px,
+          var(--field-line) 27px 29px,
+          transparent 30px 58px
+        ),
+        linear-gradient(
+          to bottom,
+          var(--field-top),
+          var(--field-bottom)
+        );
+      clip-path: polygon(
+        0 13%,
+        35% 2%,
+        68% 7%,
+        100% 0,
+        100% 100%,
+        0 100%
+      );
+      transition: background 1s;
+    }
+
+    .field::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(
+        ellipse at 50% 100%,
+        transparent 10%,
+        rgba(75, 52, 15, .12) 100%
+      );
+    }
+
+    /* Bloemen op de voorgrond */
+
+    .flower {
+      position: absolute;
+      z-index: 6;
+      left: var(--x);
+      bottom: var(--y);
+      width: var(--size);
+      aspect-ratio: 1;
+      background:
+        radial-gradient(circle, #a37328 0 15%, transparent 17%),
+        radial-gradient(circle at 50% 15%, var(--petal) 0 18%, transparent 20%),
+        radial-gradient(circle at 85% 50%, var(--petal) 0 18%, transparent 20%),
+        radial-gradient(circle at 50% 85%, var(--petal) 0 18%, transparent 20%),
+        radial-gradient(circle at 15% 50%, var(--petal) 0 18%, transparent 20%);
+      filter: drop-shadow(1px 2px 2px rgba(0,0,0,.12));
+    }
+
+    .flower::before {
+      content: "";
+      position: absolute;
+      top: 85%;
+      left: 48%;
+      width: 2px;
+      height: 22px;
+      background: #627c3b;
+      z-index: -1;
+    }
+
+    /* Automatische dark mode */
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        color-scheme: dark;
+
+        --sky-top: #101d36;
+        --sky-bottom: #63546e;
+        --sun: #f0efd7;
+        --cloud: rgba(173, 178, 207, .18);
+
+        --hill-back: #384d51;
+        --hill-front: #283e40;
+        --field-top: #5b634a;
+        --field-bottom: #343f31;
+        --field-line: rgba(16, 30, 23, .22);
+
+        --tree: #172f2e;
+        --house: #978477;
+        --roof: #68483e;
+        --petal: #dad8bf;
+      }
+
+      .stars {
+        opacity: 1;
+      }
+
+      .sun {
+        box-shadow:
+          0 0 35px rgba(234, 238, 255, .25),
+          0 0 110px rgba(220, 225, 255, .10);
+      }
+
+      .house::after {
+        background: #554438;
+        box-shadow: -20px -12px 0 -3px #ffd18a;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .sun {
+        right: 14%;
+      }
+
+      .house {
+        transform: scale(.75);
+        transform-origin: bottom;
+      }
+
+      .tree {
+        transform-origin: bottom;
+      }
+
+      .flower {
+        transform: scale(.75);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation: none !important;
+        transition: none !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="scene"
+        role="img"
+        aria-label="Een rustig zuidelijk landschap met
+                    een gouden veld, heuvels en bloemen.">
+
+    <div class="stars"></div>
+    <div class="sun"></div>
+    <div class="cloud one"></div>
+    <div class="cloud two"></div>
+
+    <div class="hill back"></div>
+    <div class="hill front"></div>
+
+    <div class="house"></div>
+
+    <div class="tree one"></div>
+    <div class="tree two"></div>
+    <div class="tree three"></div>
+
+    <div class="field"></div>
+
+    <div class="flower"
+         style="--x:8%;--y:12%;--size:25px"></div>
+    <div class="flower"
+         style="--x:15%;--y:5%;--size:18px"></div>
+    <div class="flower"
+         style="--x:33%;--y:17%;--size:15px"></div>
+    <div class="flower"
+         style="--x:46%;--y:8%;--size:28px"></div>
+    <div class="flower"
+         style="--x:58%;--y:22%;--size:13px"></div>
+    <div class="flower"
+         style="--x:71%;--y:7%;--size:24px"></div>
+    <div class="flower"
+         style="--x:86%;--y:14%;--size:20px"></div>
+    <div class="flower"
+         style="--x:94%;--y:4%;--size:29px"></div>
+  </main>
+</body>
+</html>
+
